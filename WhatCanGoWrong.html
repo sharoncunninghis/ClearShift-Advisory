@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>What Can Go Wrong: Benefits Edition</title>
+  <!-- Tailwind (Play CDN for quick demos) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React 18 UMD + ReactDOM UMD -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel for in-browser JSX transform (demo only) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-red-600/10 via-red-500/5 to-white text-slate-800">
+  <div id="root" class="p-6"></div>
+
+  <script type="text/babel">
+    const { useMemo, useState } = React;
+    const LOGO_DATA_URL = "data:image/jpeg;base64,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";
+
+    const QUESTIONS = [
+      { q: "Who has ERISA fiduciary duties for employer-sponsored health plans?", options: ["The employer/plan sponsor", "The carrier", "The TPA"], answer: 0 },
+      { q: "Who is usually NOT the fiduciary for a self-funded plan, despite assumptions?", options: ["The carrier", "The employer", "The plan committee"], answer: 0 },
+      { q: "What risk do employers underestimate in health plans under ERISA?", options: ["Litigation over fees, parity, and coverage", "Premium increases", "Employee absenteeism"], answer: 0 },
+      { q: "What does MHPAEA require for non-quantitative treatment limits (NQTLs)?", options: ["Detailed comparative analysis", "A generic memo", "Nothing; carriers handle"], answer: 0 },
+      { q: "What interaction complicates COBRA compliance for small/multi-state groups?", options: ["State continuation/mini-COBRA", "FMLA", "Wellness incentives"], answer: 0 },
+      { q: "What liability can occur when changing carriers or funding types?", options: ["Run-in/run-out claims", "Higher stop-loss premiums", "None"], answer: 0 },
+      { q: "Who should own prescription drug rebates and fees under the contract?", options: ["The plan/employer", "The PBM", "The member"], answer: 0 },
+      { q: "What is the difference between PBM spread pricing and pass-through?", options: ["Spread keeps margin between billed and paid", "Spread passes all rebates", "No difference"], answer: 0 },
+      { q: "What is the member risk if specialty drug accumulator programs aren’t managed well?", options: ["Higher out-of-pocket costs", "Premium decreases", "Faster approvals"], answer: 0 },
+      { q: "What is a major risk of reference-based pricing (RBP)?", options: ["Balance billing exposure", "No rebate eligibility", "Low employee uptake"], answer: 0 },
+      { q: "What contract clauses can block access to data and pricing?", options: ["Gag clauses", "Eligibility terms", "HSA contributions"], answer: 0 },
+      { q: "What happens if employers lack rights to de-identified PHI/claims data?", options: ["They can’t audit or design strategy", "Nothing significant", "Rebates increase"], answer: 0 },
+      { q: "What is a danger of opaque pharmacy contracting?", options: ["Hidden definitions and fees inflate cost", "Members get lower copays", "Stop-loss pays all claims"], answer: 0 },
+      { q: "What is a risk of relying heavily on rebate guarantees?", options: ["Encourages use of high-cost drugs", "Rebates disappear", "Stop-loss won’t cover claims"], answer: 0 },
+      { q: "Why benchmark ASO/TPA fees and audit rights?", options: ["To avoid overpaying and enforce accountability", "To cut COBRA premiums", "To eliminate wellness costs"], answer: 0 },
+      { q: "What should be considered with out-of-network repricing vendors?", options: ["Their fee basis and member disruption risk", "Their rebate guarantees", "Their call center hours"], answer: 0 },
+      { q: "What is often missing in performance guarantees (PGs)?", options: ["Meaningful financial at-risk tied to outcomes", "Discounts on premiums", "Broker commissions"], answer: 0 },
+      { q: "What cost issue do site-of-care strategies address?", options: ["High hospital outpatient infusion/imaging", "Pharmacy rebates", "Payroll taxes"], answer: 0 },
+      { q: "Why are GLP-1 weight loss drugs a budget concern?", options: ["Long-term high utilization & costs", "Rebates are banned", "They replace generics"], answer: 0 },
+      { q: "What mismatch can reduce ROI for fertility/maternity programs?", options: ["Network steerage vs. actual outcomes", "Rebates vs. fees", "COBRA eligibility"], answer: 0 },
+      { q: "What barrier affects behavioral health access compliance?", options: ["Network adequacy vs. parity", "PBM networks", "State taxes"], answer: 0 },
+      { q: "What risk arises from poorly aligned prior authorization policies?", options: ["Member dissatisfaction & parity issues", "Rebates vanish", "ACA mandate failures"], answer: 0 }
+    ]; // exactly 22
+
+    function stripCheckmark(text) { return text.replace(/\s*✅\s*/g, "").trim(); }
+    function normalize(raw) {
+      return raw.map((item) => {
+        const options = item.options.map(String);
+        let answerIndex = typeof item.answer === "number" ? item.answer : -1;
+        if (answerIndex < 0) {
+          answerIndex = options.findIndex((o) => /✅/.test(o));
+          if (answerIndex < 0) answerIndex = 0;
+        }
+        return { q: item.q, options: options.map(stripCheckmark), answer: answerIndex };
+      });
+    }
+    function shuffle(a) { const arr = a.slice(); for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+
+    function App() {
+      const prepared = React.useMemo(() => {
+        const active = normalize(QUESTIONS);
+        return active.map((q) => {
+          const perm = shuffle([...Array(q.options.length).keys()]);
+          const correctAfterShuffle = perm.indexOf(q.answer);
+          return { ...q, perm, correctAfterShuffle };
+        });
+      }, []);
+
+      const [i, setI] = useState(0);
+      const [picked, setPicked] = useState(null);
+      const [score, setScore] = useState(0);
+      const [finished, setFinished] = useState(false);
+
+      const current = prepared[i];
+      const displayOptions = current.perm.map((idx) => current.options[idx]);
+
+      function choose(idx) {
+        if (picked !== null) return;
+        setPicked(idx);
+        if (idx === current.correctAfterShuffle) setScore((s) => s + 1);
+        setTimeout(() => {
+          const next = i + 1;
+          if (next >= prepared.length) setFinished(true);
+          else { setI(next); setPicked(null); }
+        }, 800);
+      }
+
+      function reset() { window.location.reload(); }
+
+      return (
+        <div className="min-h-screen">
+          <header className="max-w-3xl mx-auto flex items-center gap-3 mb-4 p-6">
+            <img src={LOGO_DATA_URL} alt="" className="h-10 w-auto" />
+            <h1 className="text-2xl font-extrabold tracking-tight">What Can Go Wrong: <span className="text-blue-700">Benefits Edition</span></h1>
+          </header>
+          <main className="max-w-3xl mx-auto p-6">
+            {!finished ? (
+              <div className="bg-white rounded-2xl shadow p-6">
+                <div className="flex items-center justify-between mb-4 text-sm">
+                  <span>Question {i + 1} / {prepared.length}</span>
+                  <span>Score: {score}</span>
+                </div>
+                <div className="text-lg font-semibold mb-4">{current.q}</div>
+                <div className="grid gap-3">
+                  {displayOptions.map((opt, idx) => {
+                    const isPicked = picked === idx;
+                    const isCorrect = idx === current.correctAfterShuffle;
+                    const state = picked !== null ? (isCorrect ? "ring-2 ring-green-500" : isPicked ? "ring-2 ring-red-500" : "opacity-70") : "hover:ring-2 hover:ring-blue-300";
+                    return (
+                      <button key={idx} onClick={() => choose(idx)} className={`text-left w-full border rounded-xl p-3 transition ${state}`}>
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow p-8 text-center">
+                <h2 className="text-2xl font-bold mb-2">Nice work!</h2>
+                <p className="mb-4">Your score: {score} / {prepared.length}</p>
+                <button onClick={reset} className="px-4 py-2 rounded-xl border hover:bg-blue-50">Play again</button>
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
